@@ -1,0 +1,18 @@
+#!/bin/bash
+case $1 in
+   [-][h]) 
+        echo 'use download mp4 video from online url'
+        echo "Eg: `basename $0` -y <youtube-url> (download youtube video in mp4 480p format; if fail, try youtube-dl -F instead)"
+        echo "Eg: `basename $0` -t <youtube-url> (download youtube video's transcript using youtube-transcript-api)"
+        exit 0
+        ;;
+   [-][y]) 
+        python "$MACPATH"/source/mytool.mp4get.youtube-dl.py "${@:2}"
+        ;;
+   [-][t]) 
+        python "$MACPATH"/source/mytool.mp4get.youtube-transcript.py "${@:2}"
+        ;;
+    *)
+        echo "please use `basename $0` -h for help"
+        ;;
+esac

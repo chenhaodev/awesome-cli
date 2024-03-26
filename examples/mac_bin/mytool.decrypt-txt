@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+import argparse
+import base64
+from cryptography.fernet import Fernet
+
+def decrypt_message(token, key):
+    token_bytes = bytes(token, encoding='utf-8')
+    key_bytes = bytes(key, encoding='utf-8')
+    f = Fernet(key_bytes)
+    msg = f.decrypt(token_bytes)
+    print('msg: ', end='')
+    print(msg.decode('utf-8'))
+
+def main():
+    parser = argparse.ArgumentParser(description="Decrypt a message")
+    parser.add_argument("-t", "--token", type=str, help="Token to decrypt.", required=True)
+    parser.add_argument("-k", "--key", type=str, help="Key for decryption.", default='VDtsdwURj5FwhqIoOolTqV6prdMnFh0aFx-XVrpoR-U=')
+    
+    args = parser.parse_args()
+    decrypt_message(args.token, args.key)
+
+if __name__ == "__main__":
+    main()

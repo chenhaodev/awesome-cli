@@ -1,0 +1,27 @@
+#!/bin/bash
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+		echo 'recursively call pdftotext to convert all pdf to txt'
+        echo "Eg: `basename $0` -i input.pdf (extract a research paper's content, using pdftotext)"
+        echo "Eg: `basename $0` -r input.pdf (extract a research paper's content, using pymupdf)"
+        echo "Eg: `basename $0` -a (extract all pdfs content, using pdftotext)"
+        exit 0
+        ;;
+    [-][i])
+        pdftotext "${@:2}"
+        ;;
+    [-][r])
+        python "$MACPATH"/source/myfile.pdf2txt.pymupdf.py "${@:2}"
+        ;;
+    [-][a])
+        ls *.pdf > temp.list
+        while read -r source
+        do
+            pdftotext "$source"
+        done < temp.list
+        rm temp.list
+        ;;
+    *)
+        echo "please use `basename $0` -h for help"
+        ;;
+esac

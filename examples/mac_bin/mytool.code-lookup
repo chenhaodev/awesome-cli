@@ -1,0 +1,47 @@
+#!/bin/sh
+
+cd "$MACPATH"
+codefile=../doc/mycode
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+		echo 'manage my code'
+		echo '[-w]: edit code' 
+		echo '[-r]: view code'
+        echo '[-s]: search note (single line output) with keyword'
+        echo '[-S]: search note (5 lines output) with keyword'
+		echo '[-a]: quick attach'
+        echo '[-c]: lunch copilot'
+        echo "Eg: <cmd> -s \"wechat\" "
+        echo "Eg: <cmd> "
+        exit 0
+        ;;
+   [-][wW]) 
+		vim $codefile 
+		exit 0 
+        ;;
+   [-][s]) 
+		cat $codefile | grep -i -A1 $2
+		exit 0 
+        ;;
+   [-][S]) 
+		cat "$codefile" | grep -i -A5 $2
+		exit 0 
+        ;;
+   [-][aA]) 
+		echo "$2" >> $codefile
+		exit 0 
+        ;;
+   [-][r])
+		cat $codefile 
+        ;;
+   [-][c]) 
+        #brew install tabbyml/tabby/tabby
+        echo "lunch tabby server. now you can use StarCoder-1B (copilot) in vim"
+        tabby serve --device metal --model TabbyML/StarCoder-1B
+		exit 0 
+        ;;
+    *)
+        echo "please use -h for help"
+        ;;
+esac
+cd -

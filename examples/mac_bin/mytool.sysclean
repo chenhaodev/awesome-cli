@@ -1,0 +1,106 @@
+#!/bin/bash
+# clean my macbook. 
+# system version: 10.10.5 
+
+function manual()
+{
+    echo "clean your macbook: `basename $0`"
+    echo "manual clean following address:"
+    echo "sudo rm /Users/chenhao/Library/Caches/Homebrew/downloads/*"
+    echo "(check deeper) /Users/chenhao/Library/Mail/V9/*/*"
+    echo "$HOME/.cache/huggingface/hub"
+}
+
+function main()
+{
+    # you can use cleanmymac.app to scan and verify the following path
+    LIBCACHE="$HOME/Library/Caches"
+    SYSLIB="/Library/Caches"
+    MAIL0="$HOME/Library/Mail/*/IMAP*"
+    QUICKLOOK='/private/var/folders/*/*/*/com.apple.QuickLook.thumbnailcache'
+    TRASH="$HOME/.Trash"
+    DASHTEMP="$HOME/Library/Application\ Support/Dash/Temp"
+    
+    # remove local backup 
+    # http://classicyuppie.com/what-crap-is-this-os-xs-mobilebackups/
+    sudo tmutil disablelocal  
+    echo "please manually delete local image backup:"
+    echo "sudo tmutil listlocalsnapshots /"
+    echo "e.g. tmutil deletelocalsnapshots 2017-09-27-005259"
+    
+    #pip, homebrew
+
+    sudo rm "$LIBCACHE/Homebrew/downloads/*"
+    sudo rm "$LIBCACHE/pipenv/*"
+    sudo rm "$LIBCACHE/pip/*"
+
+    # spotlight, safari, chrome, opera
+    echo "you can use cleanmymac.app to locate which app have the largest cache size; then ... manually add config to remove"
+    sudo rm -rf "$LIBCACHE/com.apple.Safari/*"
+    sudo rm -rf "$LIBCACHE/com.apple.Spotlight/*"
+    sudo rm -rf "$LIBCACHE/Google/Chrome/Default/Cache/*"
+    sudo rm -rf "$LIBCACHE/Google/Chrome/Default/Media\ Cache/*"
+    sudo rm -rf "$LIBCACHE/com.apple.helpd/*"
+    sudo rm -rf "$LIBCACHE/com.operasoftware.Opera/Cache/*"
+    sudo rm -rf "$LIBCACHE/com.operasoftware.Opera/Media\ Cache/*"
+    sudo rm -rf "$LIBCACHE/pipenv/*"
+    
+    # mail attachment
+    sudo rm -rf $MAIL0/*
+    # find $MAIL1 -type f -iname '*.pdf' -print -delete
+    # find $MAIL1 -type f -iname '*.zip' -print -delete
+    # find $MAIL1 -type f -iname '*.rar' -print -delete
+    # find $MAIL1 -type f -iname '*.jpg' -print -delete
+    # find $MAIL1 -type f -iname '*.png' -print -delete
+    # find $MAIL1 -type f -iname '*.bmp' -print -delete
+    # find $MAIL1 -type f -iname '*.ppt' -print -delete
+    # find $MAIL1 -type f -iname '*.pptx' -print -delete
+    # find $MAIL1 -type f -iname '*.docx' -print -delete
+    # find $MAIL1 -type f -iname '*.mov' -print -delete
+    # find $MAIL1 -type f -iname '*.wav' -print -delete
+    # find $MAIL1 -type f -iname '*.mp3' -print -delete
+    # find $MAIL1 -type f -iname '*.mp4' -print -delete
+    # find $MAIL1 -type f -iname '*.m4a' -print -delete
+    
+    # brew install package
+    brew cleanup
+    sudo rm -rf $SYSLIB/Homebrew/*
+    
+    # clean quicklook.thumbnailcache
+    sudo rm -rf $QUICKLOOK/*
+    
+    # clean trash
+    sudo rm -rf $TRASH/*
+    
+    # clean dash temp
+    sudo rm -rf $DASHTEMP/*
+
+    # clean huggingface db and models
+    sudo rm -rf ~/.cache/huggingface
+    
+    # show largest 10 files
+    read -p "Find your largest files? [yes/no] " response
+    case $response in
+       [yY][eE][sS]|[yY]) 
+    		echo "largest files in $HOME ... "
+    		cd $HOME 
+    		tree | du | sort -nr | head -30
+    		cd -
+    		;;
+        *)
+    		exit 0
+            ;;
+    esac
+}
+
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+        manual 
+        exit 0
+        ;;
+    *)
+        main
+        exit 0
+        ;;
+esac
+

@@ -1,0 +1,20 @@
+#!/bin/bash
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+		echo 'reduce all *.mp4 *.mov *.avi *.wmv *.webm size'
+		echo 'this cmd equals to: '
+        echo '   for-loop{ ffmpeg -i $input.mov/mp4/avi... -vcodec h264 -acodec aac $output.mp4 }'
+        echo "Eg: <cmd> "
+        exit 0
+        ;;
+    *)
+        ls *.mp4 *.mov *.avi *.wmv *.webm *.mkv > temp.list
+        
+        while read -r source
+        do
+          var=$(basename $source) ; filename="${var%.*}"; ffmpeg -i "$source" -vcodec h264 -acodec aac "$filename".opt.mp4
+        done < temp.list
+        rm temp.list
+        exit 0
+        ;;
+esac

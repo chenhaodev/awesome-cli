@@ -1,0 +1,62 @@
+#!/bin/sh
+
+cd "$MACPATH"
+webfile=../doc/myweb #top-10 daily website
+webfiles=../doc/mywebs
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+		echo 'manage my bookmark'
+		echo '[-W]: edit bookmarks' 
+		echo '[-R]: view bookmarks'
+		echo '[-S]: bookmark hint'
+		echo '[-s]: search keyword'
+		echo '[-a]: quick attach'
+		echo '[-q]: open top-10 websites. use [-r], [-w] to view/edit'
+        echo "Eg: <cmd> -s \"gpt\" "
+        echo "Eg: <cmd> -S "
+        echo "Eg: <cmd> -a \"keyword, website.com\" "
+        exit 0
+        ;;
+   [-][R])
+		cat $webfiles 
+		exit 0 
+        ;;
+   [-][r])
+		cat $webfile
+		exit 0 
+        ;;
+   [-][W]) 
+		vim $webfiles 
+		exit 0 
+        ;;
+   [-][w]) 
+		vim $webfile
+		exit 0 
+        ;;
+   [-][q]) 
+		cat $webfile | grep "$2" | awk -F '//' '{print $2}' > temp.txt 
+        while read url ; do
+            #echo "open -a /Applications/Opera.app https://$url"
+            open -a /Applications/Opera.app https://$url
+        done < temp.txt
+        rm temp.txt
+		exit 0 
+        ;;
+   [-][s]) 
+		cat $webfiles | grep "$2"
+		exit 0 
+        ;;
+   [-][S]) 
+		cat $webfiles | grep -i -A5 "$2"
+		exit 0 
+        ;;
+   [-][a]) 
+        echo "${@:2}" >> $webfiles
+		exit 0 
+        ;;
+    *)
+		cat $webfiles 
+        exit 0
+        ;;
+esac
+cd -

@@ -1,0 +1,16 @@
+*.o
+*.mat
+*.fig
+*.doc
+*.pdf 
+*.png 
+*.html 
+*.rar 
+*.zip 
+*.tgz 
+*.bmp 
+*.jpg
+.DS_Store
+*.pem
+archived/
+versions/

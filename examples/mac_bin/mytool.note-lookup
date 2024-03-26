@@ -1,0 +1,94 @@
+#!/bin/sh
+
+cd "$MACPATH"
+notefile=../doc/mynote
+notepath=../doc/mynotepath
+newsfile=../doc/mynews
+timeid=`date +%Y%m%d-%H%M%S`
+uniqid=`uuidgen | awk -F '-' '{print $1}'`
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+		echo 'manage my note'
+		echo '[-w]: edit note' 
+		echo '[-r]: view note'
+        echo '[-i]: create note with new entry and folder, aligned with uniq id'
+        echo '[-id]: create new file id from input key words, uuid and datetime; auto-save in clipboard'
+        echo '[-s]: search note (single line output) with keyword'
+        echo '[-s5]: search note (5 lines output) with keyword'
+        echo '[-snr]: search from appendix-notes in search path'
+        echo '[-sni]: insert new path for appendix-notes'
+        echo '[-sne]: edit paths for appendix-notes'
+		#echo '[-a]: quick attach note'
+		echo '[-a]: quick attach note from clipboard'
+		echo '[-nr]: review news'
+		echo '[-nc]: quick attach news from clipboard'
+        echo 'Eg: <cmd> -id #cp xxx $SAVE'
+        echo "Eg: <cmd> -nc "
+        echo "Eg: <cmd> -s \"leader\" "
+        echo "Eg: <cmd> -s5 \"gpt\" "
+        echo "Eg: <cmd> -sN \"LLM arch\" "
+        #echo "Eg: <cmd> -a \"#q- how to finetune llm? https://xxxx \" "
+        echo "Eg: <cmd> -a "
+        echo "Eg: <cmd> -i \"ai-med-image\" #auto-add-entry of ai.med.0155A5C0 in mynote.md, auto-mkdir ai.med.0155A5C0 in ~/Desktop"
+        exit 0
+        ;;
+   [-][s][n][r]) 
+        python "$MACPATH"/source/mytool.note-lookup-search-appendix-notes.py "${@:2}"
+		exit 0 
+        ;;
+   [-][s][n][i]) 
+        pbpaste >> "$notepath"
+		exit 0 
+        ;;
+   [-][s][n][e]) 
+        vim "$notepath"
+		exit 0 
+        ;;
+   [-][n][c]) 
+		echo "" >> $newsfile
+		echo "$timeid-$uniqid" >> $newsfile
+        pbpaste >> $newsfile 
+        vim "$newsfile" 
+		exit 0 
+        ;;
+   [-][n][r]) 
+        vim "$newsfile" 
+		exit 0 
+        ;;
+   [-][w]) 
+		vim "$notefile" 
+		exit 0 
+        ;;
+   [-][i][d]) 
+        python "$MACPATH"/source/mytool.note-lookup-id-gen.py "${@:2}"
+		exit 0 
+        ;;
+   [-][i]) 
+        echo "#auto-add-entry of $2-uuid in mynote.md, auto-mkdir $2-uuid in ~/Desktop"
+        cmd_res=$(python "$MACPATH"/source/mytool.note-lookup-id-mgr.py $2)
+        echo "$cmd_res"
+        echo "" >> $notefile
+        echo "#q- $cmd_res" >> $notefile
+		exit 0 
+        ;;
+   [-][s]) 
+		cat "$notefile" | grep -i -A1 "${@:2}"
+		exit 0 
+        ;;
+   [-][s][5]) 
+		cat "$notefile" | grep -i -A5 "${@:2}"
+		exit 0 
+        ;;
+   [-][a]) 
+        #echo "${@:2}" >> $notefile
+        pbpaste >> $notefile
+		exit 0 
+        ;;
+   [-][r]) 
+		cat "$notefile" 
+        ;;
+    *)
+        echo "please use -h for help"
+        ;;
+esac
+cd -

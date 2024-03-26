@@ -1,0 +1,63 @@
+#!/bin/bash
+
+cd "$MACPATH"
+taskfile=../doc/tasks.json
+mytime=`date +"%Y%m%d"`
+
+case $1 in
+   [-][h]) 
+        echo "A simple task manager CLI"
+        echo "Eg: <cmd> -n new task"
+        echo "Eg: <cmd> -l"
+        echo "Eg: <cmd> -c 1 (the task [id:1] is completed)"
+        echo "Eg: <cmd> -d 1 (delete the task [id:1]"
+        echo "Eg: <cmd> -t tag-urgent"
+        echo "Eg: <cmd> -E (direct edit database)"
+        echo "Eg: <cmd> -R 1 +3 (reminder task [id:1] 3 days later. +2w referes a 2 weeks reminder)"
+        echo "Eg: <cmd> -C (check if there's any reminder today)"
+        echo "Eg: <cmd> -B (backup current task info into $MATHPATH/../doc/tasks.backup.txt. Use -H to check history)"
+        #python "$MACPATH"/source/mytool.taskmgr.py -h 
+        ;;
+   [-][n]) 
+        python "$MACPATH"/source/mytool.taskmgr.py new "${@:2}"
+        ;;
+   [-][l]) 
+        python "$MACPATH"/source/mytool.taskmgr.py list "${@:2}"
+        ;;
+   [-][c]) 
+        python "$MACPATH"/source/mytool.taskmgr.py complete "${@:2}"
+        ;;
+   [-][d]) 
+        python "$MACPATH"/source/mytool.taskmgr.py remove "${@:2}"
+        ;;
+   [-][t])
+        python "$MACPATH"/source/mytool.taskmgr.py tags "${@:2}"
+        ;;
+   [-][R]) 
+        python "$MACPATH"/source/mytool.taskmgr.py reminder "${@:2}"
+        ;;
+   [-][C]) 
+        python "$MACPATH"/source/mytool.taskmgr.py check
+        ;;
+   [-][E]) 
+        vim "$taskfile" 
+        ;;
+   [-][B]) 
+        echo "Write task history on $mytime into $MACPATH/../doc/tasks.backup.txt"
+
+        echo "" >> "../doc/tasks.backup.txt"
+        echo "----------------------------------------" >> "../doc/tasks.backup.txt"
+        echo "-------- Tasks History $mytime --------" >> "../doc/tasks.backup.txt"
+        echo "----------------------------------------" >> "../doc/tasks.backup.txt"
+        python "$MACPATH"/source/mytool.taskmgr.py list "${@:2}" >> "../doc/tasks.backup.txt"
+        echo "" >> "../doc/tasks.backup.txt"
+        ;;
+   [-][H]) 
+        echo "Check task history in $MACPATH/../doc/tasks.backup.txt"
+        cat "../doc/tasks.backup.txt"
+        ;;
+    *)
+        echo "please use -h for help"
+        ;;
+esac
+cd -

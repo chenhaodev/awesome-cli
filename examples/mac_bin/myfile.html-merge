@@ -1,0 +1,35 @@
+#!/bin/bash
+
+case $1 in
+   [-][h]) 
+        echo 'merge *.html in $HOME/Desktop into one'
+        exit 0
+        ;;
+    *)
+        echo 'merging *.html in $HOME/Desktop into MergedFinalData.html'
+
+        cd $HOME/Desktop/
+        output="$HOME/Desktop/MergedFinalData.html"
+        echo "<html>
+        <head>
+        <style>
+        table, th, td {
+          border: 1px solid black;
+        }
+        </style>
+        </head>
+        <body>" > "$output"
+
+        for file in $HOME/Desktop/*.html ; do
+            if [ "$file" != "$output" ]; then
+                cat "$file" >> "$output"
+            fi    
+        done
+        
+        echo "</body>
+        </html>" >> "$output"
+        
+        cd - 
+        ;;
+esac
+

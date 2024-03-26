@@ -1,0 +1,43 @@
+#!/bin/bash
+
+cd "$MACPATH"
+urlfile=../doc/myurl
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+		echo "loop: {read url and open it in web-browser}"
+        echo "e.g. cmd         #check url list"
+        echo "e.g. cmd -w      #edit url list"
+        echo "e.g. cmd -a      #open all url"
+        echo "e.g. cmd -k work #open url with the tag 'work' "
+        exit 0
+        ;;
+   [-][wW]) 
+		vim $urlfile 
+		exit 0 
+        ;;
+   [-][aA]) 
+		echo 'open all urls ...'
+		while read name; do
+            open "$name"
+        done < "$urlfile"
+		exit 0 
+        ;;
+   [-][kK]) 
+		echo 'open all urls with keys'
+		while read name; do
+            keyword=$(echo "$name" | awk -F ',' '{print $1}')
+            urladdr=$(echo "$name" | awk -F ',' '{print $2}')
+            #echo "$name"
+            #echo "$urladdr"
+            if [ "$2" == "$keyword" ]; then
+                open $urladdr
+            fi
+        done < "$urlfile"
+		exit 0 
+        ;;
+    *)
+		cat $urlfile 
+		exit 0 
+        ;;
+esac
+cd -

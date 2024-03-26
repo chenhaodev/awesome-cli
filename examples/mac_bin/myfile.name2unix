@@ -1,0 +1,18 @@
+#!/bin/bash
+
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+		echo "replace space in filename into '_'; please install tr first"
+        echo "e.g. <cmd> *.txt"
+        exit 0
+        ;;
+    *)
+		echo 'delete space in filenames ...'
+		ls "$@" |
+		while read name; do
+		    na=$(echo $name | tr ' ' '_' | tr '?PM' '_PM')
+		    mv "$name" $na
+		done
+		exit 0 
+        ;;
+esac

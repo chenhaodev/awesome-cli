@@ -1,0 +1,64 @@
+#!/bin/bash
+#scripts name: fileformatunix
+
+function manual()
+{
+    echo "make txt into unix UTF-8 style, e.g."
+    echo "1. delete ^M (control+v+m)"
+    echo "2. move Chinese symbols (e.g. 。) to English format"
+    echo "convert a file: `basename $0` -f <filename>"
+    echo "convert all: `basename $0` -a"
+}
+
+function main()
+{
+	cat $1 | sed 's/，/, /g' | sed 's/。/. /g' | sed 's/；/; /g' | sed 's/：/: /g' | sed 's/－/-/g' | sed 's/（/(/g' | sed 's/）/)/g' | sed 's/！/! /g' \
+	| sed  's/＊/* /g' \
+	| sed  's/＝/=/g' \
+	| sed  's/＋/+/g' \
+	| sed  's/……/.../g' \
+	| sed  's/＃/#/g' \
+	| sed  's/［/[/g' \
+	| sed  's/］/]/g' \
+	| sed  's/｛/{/g' \
+	| sed  's/｝/}/g' \
+	| sed  's/｜/|/g' \
+	| sed  's/、/, /g' \
+	| sed  's/《/</g' \
+	| sed  's/》/>/g' \
+	| sed  's/？/?/g' \
+	| sed  's=／=/=g' \
+	| sed  "s/‘/'/g"  \
+	| sed  "s/’/'/g"  \
+	| sed  's/“/"/g'  \
+	| sed  's/”/"/g'  \
+	| sed  's///g'  \
+	> $2
+}
+
+#main function
+
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+        manual
+        exit 0
+        ;;
+   [-][f]) 
+        main $2 temp.txt
+        mv temp.txt $2
+        exit 0
+        ;;
+   [-][a]) 
+        ls *.txt > temp.list
+        
+        while read -r source
+        do
+            main $source temp.txt
+            mv temp.txt $source
+        done < temp.list
+        rm temp.list
+        rm temp.txt
+        exit 0
+        ;;
+esac
+

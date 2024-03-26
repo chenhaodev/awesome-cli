@@ -1,0 +1,11 @@
+#!/bin/bash
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+        echo 'parsing all emails in this folder to txt [maybe then use GPT to summarize]'
+        echo "Eg: `basename $0`"
+        exit 0
+        ;;
+    *)
+        python "$MACPATH"/source/myfile.eml2txt.py "$@"
+        ;;
+esac

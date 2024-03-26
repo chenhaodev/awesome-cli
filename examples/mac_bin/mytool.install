@@ -1,0 +1,20 @@
+#!/bin/sh
+
+file=$ccmacspace/env/install/mac101403.log
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+        echo "record the installation list for macbook"
+        echo "Eg: view toolbox list `basename $0` "
+        echo "Eg: edit toolbox list `basename $0` -w "
+        exit 0
+        ;;
+   [-][wW]) 
+		vim $file 
+		exit 0 
+        ;;
+    *)
+		cat $file 
+        exit 0
+        ;;
+esac
+

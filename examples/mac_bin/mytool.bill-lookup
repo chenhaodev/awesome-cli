@@ -1,0 +1,41 @@
+#!/bin/sh
+
+cd "$MACPATH"
+billfile=../doc/mybill
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+		echo 'manage my bill'
+		echo '[-w]: edit bill' 
+		echo '[-r]: view bill'
+        echo '[-s]: search bill (single line output) with keyword'
+        echo '[-S]: search bill (5 lines output) with keyword'
+		echo '[-a]: quick attach'
+        echo "Eg: <cmd> -s \"pain\" "
+        echo "Eg: <cmd> -s pain | trans -b :zh "
+        exit 0
+        ;;
+   [-][w]) 
+		vim "$billfile" 
+		exit 0 
+        ;;
+   [-][s]) 
+		cat "$billfile" | grep -i -A1 $2
+		exit 0 
+        ;;
+   [-][S]) 
+		cat "$billfile" | grep -i -A5 $2
+		exit 0 
+        ;;
+   [-][a]) 
+		#echo "$2" >> $billfile
+        echo "${@:2}" >> $billfile
+		exit 0 
+        ;;
+   [-][r]) 
+		cat "$billfile" 
+        ;;
+    *)
+        echo "please use <cmd> -h for help"
+        ;;
+esac
+cd -

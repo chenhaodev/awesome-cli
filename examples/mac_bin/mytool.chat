@@ -1,0 +1,63 @@
+#!/bin/bash
+case $1 in
+   [-][h]) 
+        echo 'ollama run mistral'
+        echo 'get answer from web-api'
+        echo 'Eg: cmd -c (chat using open-ai, gpt-3.5-turbo)'
+        echo 'Eg: cmd -t (chat using open-ai, text-davinci-003)'
+        #echo 'Eg: cmd -ag (chat using alpha-gpt4-zn-mistral-7b on local cpu; check details in note llmtune-llama-gguf-8453c6e-20231225225421)'
+        echo 'Eg: cmd -ms (chat using mistral-7b on local cpu; check details in $AIPATH or efficient-small-llm-E229B9B9)'
+        #echo 'Eg: cmd -oh (chat using openhermes-7b on local cpu; check details ... as above)'
+        #echo 'Eg: cmd -v <absolute-image-path> (read jpg using llava-v1.5-7b on local cpu; check details ... as above)'
+        echo 'Eg: cmd -v <absolute-image-path> (read jpg using gpt-4-vision-preview; less than 0.02 per pic interpret) '
+        echo 'Eg: cmd -a <absolute-audio-path> (read wav using whisper-medium on local cpu; check details ... as above)'
+        exit 0
+        ;;
+   [-][c]) 
+        python "$MACPATH"/source/mytool.chat.gpt-3.5-turbo.py "${@:2}"
+        ;;
+   [-][t]) 
+        python "$MACPATH"/source/mytool.chat.text-davinci.py "${@:2}"
+        ;;
+#   [-][a][g]) 
+#        cd "$AIPATH/llama.cpp/"
+#        #./main -m models/sciphi-self-rag-mistral-7b-32k.Q4_K_M.gguf -p "${@:2}" -n 600 -e 2> /dev/null
+#        ./main -m models/alpha-gpt4-zn-mistral-7b-q4_0.gguf -p "${@:2}" 2> /dev/null
+#        echo "[END]"
+#        cd -
+#        ;;
+#   [-][o][h]) 
+#        cd "$AIPATH/llama.cpp/"
+#        ./main -m models/openhermes-2.5-mistral-7b.Q4_K_M.gguf -p "${@:2}" -n 600 -e 2> /dev/null
+#        echo "[END]"
+#        cd -
+#        ;;
+   [-][m][s]) 
+        cd "$AIPATH/llama.cpp/"
+        #make -j && ./main -m models/mistral-7b-instruct-v0.1.Q4_K_M.gguf -p "${@:2}" -s 100 -n 400 -e 
+        ./main -m models/mistral-7b-instruct-v0.1.Q4_K_M.gguf -p "${@:2}" -n 600 -e 2> /dev/null
+        echo "[END]"
+        cd -
+        ;;
+   [-][v]) 
+        python "$MACPATH"/source/mytool.chat.gpt-4-vision-preview.py "${@:2}"
+        ;;
+#   [-][v]) 
+#        echo 'init the model, wait for 15 sec ...'
+#        cd "$AIPATH/llava.cpp/llama-llava-cli.cpp/"
+#        ./llava-cli -m models/llava/ggml-model-q4_k.gguf  --mmproj models/llava/mmproj-model-f16.gguf --image $2 -p 'tell me what you find' --temp 0.1 -n 100 -e 2> /dev/null
+#        echo "[END]"
+#        cd -
+#        ;;
+   [-][a]) 
+        echo 'init the model, wait for 15 sec ...'
+        echo "current model only support wav as input. [convert] ffmpeg -i input.mp3 -acodec pcm_s16le -ac 1 -ar 16000 output.wav"
+        cd "$AIPATH/whisper.cpp/"
+        ./main -m models/ggml-medium.en-q5_0.bin $2 2> /dev/null
+        echo "[END]"
+        cd -
+        ;;
+    *)
+        echo "please use `basename $0` -h for help"
+        ;;
+esac

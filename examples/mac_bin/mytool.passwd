@@ -1,0 +1,45 @@
+#!/bin/sh
+
+cd "$MACPATH"
+passfile=../doc/mypass
+echo $passfile
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+		echo 'manage my code'
+		echo '[-w]: edit code' 
+		echo '[-r]: view code'
+		echo '[-S]: code hint'
+		echo '[-s]: search keyword'
+		echo '[-a]: quick attach'
+        echo "Eg: cmd -s \"wechat\" "
+        echo "Eg: cmd -S "
+        echo "Eg: cmd -a \"website.com: <a>, 3b\" "
+        exit 0
+        ;;
+   [-][rR])
+		cat $passfile 
+		exit 0 
+        ;;
+   [-][wW]) 
+		vim $passfile 
+		exit 0 
+        ;;
+   [-][s]) 
+		cat $passfile | grep -i -A1 "$2"
+		exit 0 
+        ;;
+   [-][S]) 
+		cat $passfile | head -80 
+		exit 0 
+        ;;
+   [-][a]) 
+		#echo $2 >> $passfile
+        echo "${@:2}" >> $passfile
+		exit 0 
+        ;;
+    *)
+		cat $passfile 
+        exit 0
+        ;;
+esac
+cd -

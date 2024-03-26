@@ -1,0 +1,23 @@
+#!/bin/bash
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+		echo 'recursively call source/google_ocr.py to convert all jpg/png to text'
+		#echo 'call source/google_ocr.py to convert jpg/png to text'
+        echo "Eg:  cmd <file>"
+        exit 0
+        ;;
+    *)
+        #python "$MACPATH/myfile.jpg2txt.py" "$1" | sed "s/@//g; s/§//g; s/®//g; s/^$//" > "$1.txt"
+        ls *.jpg > temp.list
+        ls *.png >> temp.list
+        
+        while read -r source
+        do
+            echo $source
+            python "$MACPATH/myfile.jpg2txt.py" "$source" | sed "s/@//g; s/§//g; s/®//g; s/^$//" > "$source.txt"
+            #python $ccmacspace/mac_bin/source/google_ocr.py $source > $source.txt
+        done < temp.list
+        rm temp.list
+        exit 0
+        ;;
+esac

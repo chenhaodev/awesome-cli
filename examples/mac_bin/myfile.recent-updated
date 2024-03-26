@@ -1,0 +1,26 @@
+#!/bin/bash
+
+function manual()
+{
+    echo 'please install ag. https://www.mankier.com/1/ag; else, use grep instead.'
+    echo 'plot recent updated files from a root folder'
+    echo "Eg: cmd -s \"/Users/chenhao/OneDrive - biofourmis.com\" "
+    echo "you may also use this command: find \"/Users/chenhao/OneDrive - biofourmis.com\" -type f -mtime -7 -ls | ag \"docx|pptx|xlsx|pdf\" "
+}
+
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+        manual 
+        exit 0
+        ;;
+   [-][sS]) 
+	#timenow=$(date +"%Y%m%d%H%M%S"); 
+        find "$2" -type f -mtime -7 -ls | ag "docx|pptx|xlsx|pdf" 
+        exit 0
+        ;;
+    *)
+        manual 
+        exit 0
+        ;;
+esac
+

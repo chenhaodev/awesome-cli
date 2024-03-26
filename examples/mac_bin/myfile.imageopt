@@ -1,0 +1,24 @@
+#!/bin/bash
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+		echo 'convert all *.png to *.jpg, then optimize the jpg size '
+		echo 'this cmd equals to: '
+        echo '   mogrify -format jpg *.png'
+        echo '   jpegoptim *.jpg'
+        echo "Eg: <cmd> "
+        echo "Eg: <cmd> -s"
+        exit 0
+        ;;
+   [-][s]) 
+        mogrify -format jpg *.png
+        mogrify -format jpg *.PNG
+        jpegoptim --size=120k *.jpg
+        exit 0
+        ;;
+    *)
+        mogrify -format jpg *.png
+        mogrify -format jpg *.PNG
+        jpegoptim *.jpg
+        exit 0
+        ;;
+esac

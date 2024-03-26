@@ -1,0 +1,11 @@
+#!/bin/bash
+case $1 in
+   [-][-][hH][eE][lL][pP]|[-][hH]) 
+        echo 'encrypt *.pdf with password' 
+        echo "Eg: <cmd> bio4mis"
+        exit 0
+        ;;
+    *)
+        python "$MACPATH"/source/myfile.encrypt.py "$@"
+        ;;
+esac

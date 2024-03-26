@@ -1,0 +1,11 @@
+#!/bin/bash
+case $1 in
+   [-][h]) 
+        echo 'shorten url.'
+        echo 'Eg: cmd <url>'
+        exit 0
+        ;;
+    *)
+        python "$MACPATH"/source/mytool.shorten-url.py "${@:1}"
+        ;;
+esac
